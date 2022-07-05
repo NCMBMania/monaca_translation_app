@@ -1,0 +1,63 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="title">翻訳</div>
+      </div>
+    </div>
+    <div class="page-content">
+			<div class="list no-hairlines-md">
+				<form id="translation">
+					<ul>
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">日本語</div>
+								<div class="item-input-wrap">
+									<textarea class="resizable" name="text" placeholder="翻訳するテキストを入力してください">Monacaを使ってアプリ開発を行おう！</textarea>
+								</div>
+							</div>
+						</li>
+						${translatedText !== '' ?
+						$h`
+						<li class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label">英訳</div>
+								<div class="item-input-wrap">
+									${translatedText}
+								</div>
+							</div>
+						</li>
+						`
+						:
+						''
+						}
+					</ul>
+					<div class="block">
+						<button class="button button-fill" @click=${addTranslate}>翻訳する</Button>
+					</div>
+				</form>
+			</div>
+    </div>
+  </div>
+</template>
+<script>
+  export default (props, { $store, $update }) => {
+    const { translations } = $store.getters;
+		let translatedText = '';
+    const addTranslate = async (e) => {
+			e.preventDefault();
+			const params = app.form.convertToData('#translation');
+			translatedText = await translationText(params.text);
+			const Translate = ncmb.DataStore('Translate');
+			const translate = new Translate;
+			await translate
+				.set('original', params.text)
+				.set('translate', translatedText)
+				.save();
+			$update();
+      $store.dispatch('addTranslate', translate);
+    }
+    return $render;
+  }
+</script>

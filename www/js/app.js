@@ -1,21 +1,11 @@
 const $ = Dom7;
 
-// Login Screen Demo
-$('#my-login-screen .login-button').on('click', function () {
-  var username = $('#my-login-screen [name="username"]').val();
-  var password = $('#my-login-screen [name="password"]').val();
-
-  // Close login screen
-  app.loginScreen.close('#my-login-screen');
-
-  // Alert username and password
-  app.dialog.alert('Username: ' + username + '<br/>Password: ' + password);
-});
+const DEEPL_API_URL = 'https://api-free.deepl.com';
 
 // NCMBの初期化用
 const event = window.cordova ? 'deviceready' : 'DOMContentLoaded';
 document.addEventListener(event, async (e) => {
-  const config = await (await fetch('./js/config.json')).json();
+  window.config = await (await fetch('./js/config.json')).json();
   window.ncmb = new NCMB(config.applicationKey, config.clientKey);
   window.app = new Framework7({
     name: 'My App', // App name
@@ -27,3 +17,19 @@ document.addEventListener(event, async (e) => {
     routes: routes,
   });
 });
+
+const translationText = async (text, target_lang = 'EN-US') => {
+  const res = await fetch(`${DEEPL_API_URL}/v2/translate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      text,
+      target_lang,
+      auth_key: config.deepLAuthKey,
+    })
+  });
+  const json = await res.json();
+  return json['translations'][0]['text'];
+}

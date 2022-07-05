@@ -1,0 +1,35 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="title">翻訳</div>
+      </div>
+    </div>
+    <div class="page-content">
+			<div class="list links-list">
+				<ul>
+					${translations.value.map(translation => $h`
+						<li><a href="/translations/${translation.objectId}">${translation.original}</a></li>
+					`)}
+				</ul>
+			</div>
+    </div>
+  </div>
+</template>
+<script>
+  export default (props, { $store, $update, $onMounted }) => {
+    const { translations } = $store.getters;
+		$onMounted(async () => {
+			const Translate = ncmb.DataStore('Translate');
+			const translates = await Translate
+				.limit(10)
+				.fetchAll();
+			translates.forEach(translate => {
+				$store.dispatch('addTranslate', translate);
+			});
+			// $update();
+		});
+    return $render;
+  }
+</script>

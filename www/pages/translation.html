@@ -1,0 +1,34 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+				<div class="left">
+					<a href="#" class="link back">
+						<i class="icon icon-back"></i>
+						<span class="if-not-md">戻る</span>
+					</a>
+				</div>
+				<div class="title">翻訳</div>
+      </div>
+		</div>
+    <div class="page-content">
+			<div class="block-title">日本語</div>
+			<div class="block">
+				<p>${translation.original}</p>
+			</div>
+			<div class="block-title">英訳</div>
+			<div class="block">
+				<p>${translation.translate}</p>
+			</div>
+    </div>
+  </div>
+</template>
+<script>
+  export default (props, { $f7route, $store }) => {
+		const { objectId } = $f7route.params;
+		const { translations } = $store.getters;
+		const translation = translations.value.filter(translation => translation.objectId === objectId)[0];
+    return $render;
+  }
+</script>
