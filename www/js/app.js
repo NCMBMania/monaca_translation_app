@@ -1,7 +1,6 @@
 const $ = Dom7;
 
 const DEEPL_API_URL = 'https://api-free.deepl.com';
-
 // NCMBの初期化用
 const event = window.cordova ? 'deviceready' : 'DOMContentLoaded';
 document.addEventListener(event, async (e) => {

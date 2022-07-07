@@ -25,10 +25,7 @@
 			const translates = await Translate
 				.limit(10)
 				.fetchAll();
-			translates.forEach(translate => {
-				$store.dispatch('addTranslate', translate);
-			});
-			// $update();
+			$store.dispatch('addTranslates', translates);
 		});
     return $render;
   }
